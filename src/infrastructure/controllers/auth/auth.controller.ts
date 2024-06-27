@@ -1,13 +1,14 @@
 import { Response } from 'express';
 
-import { Controller, Inject, Post, Res } from '@nestjs/common';
+import { Body, Controller, Inject, Post, Res } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
-
-import { UsecasesProxyModule } from '~infrastructure/usecases-proxy/usecases-proxy.module';
 
 import { LoginUseCases } from '~usecases/auth/login.usecases';
 import { RegisterUseCases } from '~usecases/auth/register.usecases';
 import { LogoutUseCases } from '~usecases/auth/logout.usecases';
+
+import { UsecasesProxyModule } from '~infrastructure/usecases-proxy/usecases-proxy.module';
+import { CreateUserDto } from '~infrastructure/dto/create-user.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -21,10 +22,9 @@ export class AuthController {
   ) {}
 
   @Post('register')
-  @ApiBearerAuth()
   @ApiOperation({ description: 'register' })
-  async register() {
-    return await this.registerUseCaseProxy.execute();
+  async register(@Body() data: CreateUserDto) {
+    return await this.registerUseCaseProxy.execute(data);
   }
 
   @Post('login')

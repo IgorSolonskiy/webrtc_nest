@@ -4,7 +4,15 @@ import { LoginUseCases } from '~usecases/auth/login.usecases';
 import { LogoutUseCases } from '~usecases/auth/logout.usecases';
 import { RegisterUseCases } from '~usecases/auth/register.usecases';
 
-@Module({})
+import { UserRepository } from '~infrastructure/repositories/user.repository';
+import { BcryptService } from '~infrastructure/bcrypt/bcrypt.service';
+import { EnvironmentModule } from '~infrastructure/config/environment/environment.module';
+import { BcryptModule } from '~infrastructure/bcrypt/bcrypt.module';
+import { RepositoriesModule } from '~infrastructure/repositories/repositories.module';
+
+@Module({
+  imports: [BcryptModule, EnvironmentModule, RepositoriesModule],
+})
 export class UsecasesProxyModule {
   static REGISTER_USECASES_PROXY = 'RegisterUseCasesProxy';
   static LOGIN_USECASES_PROXY = 'LoginUseCasesProxy';
@@ -15,9 +23,12 @@ export class UsecasesProxyModule {
       module: UsecasesProxyModule,
       providers: [
         {
-          inject: [],
+          inject: [UserRepository, BcryptService],
           provide: UsecasesProxyModule.REGISTER_USECASES_PROXY,
-          useFactory: () => new RegisterUseCases(),
+          useFactory: (
+            userRepository: UserRepository,
+            bcryptService: BcryptService,
+          ) => new RegisterUseCases(userRepository, bcryptService),
         },
         {
           inject: [],
