@@ -1,6 +1,14 @@
 import { Response } from 'express';
 
-import { Body, Controller, Inject, Post, Res } from '@nestjs/common';
+import {
+  Body,
+  ClassSerializerInterceptor,
+  Controller,
+  Inject,
+  Post,
+  Res,
+  UseInterceptors,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 
 import { LoginUseCases } from '~usecases/auth/login.usecases';
@@ -21,6 +29,7 @@ export class AuthController {
     private readonly logoutUseCaseProxy: LogoutUseCases,
   ) {}
 
+  @UseInterceptors(ClassSerializerInterceptor)
   @Post('register')
   @ApiOperation({ description: 'register' })
   async register(@Body() data: CreateUserDto) {

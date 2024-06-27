@@ -3,7 +3,7 @@ import { UserModel } from '../model/user';
 export interface IUserRepository {
   create(data: Partial<UserModel>): Promise<UserModel>;
 
-  getUserById(id: number): Promise<UserModel>;
+  getUserByEmail(email: string): Promise<UserModel>;
 
   checkExistsEmail(email: string): Promise<boolean>;
 

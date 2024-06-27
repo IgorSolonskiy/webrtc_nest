@@ -22,10 +22,10 @@ export class UserRepository implements IUserRepository {
     return this.toUser(userEntity);
   }
 
-  async getUserById(id: number): Promise<UserModel> {
+  async getUserByEmail(email: string): Promise<UserModel> {
     const userEntity = await this.userEntityRepository.findOne({
       where: {
-        id,
+        email,
       },
     });
 
@@ -65,6 +65,7 @@ export class UserRepository implements IUserRepository {
     user.id = userEntity.id;
     user.email = userEntity.email;
     user.username = userEntity.username;
+    user.password = userEntity.password;
     user.createDate = userEntity.create_date;
     user.updatedDate = userEntity.updated_date;
     user.lastLogin = userEntity.last_login;

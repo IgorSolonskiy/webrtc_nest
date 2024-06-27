@@ -1,3 +1,5 @@
+import { Exclude } from 'class-transformer';
+
 export class UserWithoutPassword {
   id: number;
   email: string;
@@ -9,5 +11,6 @@ export class UserWithoutPassword {
 }
 
 export class UserModel extends UserWithoutPassword {
+  @Exclude()
   password: string;
 }
