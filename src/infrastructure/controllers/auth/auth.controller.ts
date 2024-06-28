@@ -42,7 +42,10 @@ export class AuthController {
   async login(@Res() response: Response, @Body() data: LoginUserDto) {
     const tokens = await this.loginUseCaseProxy.execute(data);
 
-    response.cookie('refreshToken', tokens.refreshToken, { httpOnly: true });
+    response.cookie('refreshToken', tokens.refreshToken, {
+      httpOnly: true,
+      secure: true,
+    });
     response.json({ accessToken: tokens.accessToken });
   }
 
@@ -50,7 +53,11 @@ export class AuthController {
   @ApiBearerAuth()
   @ApiOperation({ description: 'logout' })
   async logout(@Res() response: Response) {
-    await this.logoutUseCaseProxy.execute();
+    await this.logoutUseCaseProxy.execute({
+      email: 'test7@email.com',
+      username: '',
+      id: 1,
+    });
 
     response.cookie('refreshToken', '', { httpOnly: true, maxAge: 0 });
     response.json({ message: 'ok' });

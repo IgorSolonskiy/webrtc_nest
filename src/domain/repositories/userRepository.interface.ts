@@ -9,5 +9,7 @@ export interface IUserRepository {
 
   updateLastLogin(email: string): Promise<void>;
 
-  updateRefreshToken(username: string, refreshToken: string): Promise<void>;
+  updateRefreshToken(email: string, refreshToken: string): Promise<void>;
+
+  clearRefreshToken(email: string): Promise<void>;
 }

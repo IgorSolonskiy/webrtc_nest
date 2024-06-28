@@ -9,9 +9,12 @@ import { BcryptService } from '~infrastructure/services/bcrypt/bcrypt.service';
 import { EnvironmentModule } from '~infrastructure/config/environment/environment.module';
 import { BcryptModule } from '~infrastructure/services/bcrypt/bcrypt.module';
 import { RepositoriesModule } from '~infrastructure/repositories/repositories.module';
+import { JwtModule } from '~infrastructure/services/jwt/jwt.module';
+import { JwtTokenService } from '~infrastructure/services/jwt/jwt.service';
+import { EnvironmentService } from '~infrastructure/config/environment/environment.service';
 
 @Module({
-  imports: [BcryptModule, EnvironmentModule, RepositoriesModule],
+  imports: [BcryptModule, EnvironmentModule, RepositoriesModule, JwtModule],
 })
 export class UsecasesProxyModule {
   static REGISTER_USECASES_PROXY = 'RegisterUseCasesProxy';
@@ -31,17 +34,31 @@ export class UsecasesProxyModule {
           ) => new RegisterUseCases(userRepository, bcryptService),
         },
         {
-          inject: [UserRepository, BcryptService],
+          inject: [
+            UserRepository,
+            BcryptService,
+            JwtTokenService,
+            EnvironmentService,
+          ],
           provide: UsecasesProxyModule.LOGIN_USECASES_PROXY,
           useFactory: (
             userRepository: UserRepository,
             bcryptService: BcryptService,
-          ) => new LoginUseCases(userRepository, bcryptService),
+            jwtTokenService: JwtTokenService,
+            jwtConfig: EnvironmentService,
+          ) =>
+            new LoginUseCases(
+              userRepository,
+              bcryptService,
+              jwtTokenService,
+              jwtConfig,
+            ),
         },
         {
-          inject: [],
+          inject: [UserRepository],
           provide: UsecasesProxyModule.LOGOUT_USECASES_PROXY,
-          useFactory: () => new LogoutUseCases(),
+          useFactory: (userRepository: UserRepository) =>
+            new LogoutUseCases(userRepository),
         },
       ],
       exports: [

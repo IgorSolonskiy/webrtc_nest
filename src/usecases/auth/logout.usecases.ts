@@ -1,7 +1,10 @@
-export class LogoutUseCases {
-  constructor() {}
+import { IUserRepository } from '~domain/repositories/userRepository.interface';
+import { IJwtServicePayload } from '~domain/adapters/jwt.interface';
 
-  async execute() {
-    //
+export class LogoutUseCases {
+  constructor(private readonly userRepository: IUserRepository) {}
+
+  async execute({ email }: IJwtServicePayload) {
+    await this.userRepository.clearRefreshToken(email);
   }
 }

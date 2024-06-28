@@ -43,15 +43,21 @@ export class UserRepository implements IUserRepository {
     );
   }
 
-  async updateRefreshToken(
-    username: string,
-    refreshToken: string,
-  ): Promise<void> {
+  async updateRefreshToken(email: string, refreshToken: string): Promise<void> {
     await this.userEntityRepository.update(
       {
-        username: username,
+        email,
       },
       { hash_refresh_token: refreshToken },
+    );
+  }
+
+  async clearRefreshToken(email: string): Promise<void> {
+    await this.userEntityRepository.update(
+      {
+        email,
+      },
+      { hash_refresh_token: null },
     );
   }
 
