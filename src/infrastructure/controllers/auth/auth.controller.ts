@@ -49,11 +49,9 @@ export class AuthController {
   @ApiOperation({ description: 'login' })
   async login(@Res() response: Response, @Body() data: LoginUserDto) {
     const tokens = await this.loginUseCaseProxy.execute(data);
+    const options = { httpOnly: true, secure: true };
 
-    response.cookie('refreshToken', tokens.refreshToken, {
-      httpOnly: true,
-      secure: true,
-    });
+    response.cookie('refreshToken', tokens.refreshToken, options);
     response.json({ accessToken: tokens.accessToken });
   }
 
