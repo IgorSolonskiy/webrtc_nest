@@ -31,10 +31,9 @@ export class LoginUseCases {
       throw new BadRequestException('Email or password is incorrect.');
     }
 
-    const tokens = this.getTokens(user);
+    const tokens = await this.getTokens(user);
 
     await this.updateLoginTime(data.email);
-    await this.setCurrentRefreshToken(tokens.refreshToken, user.email);
 
     return tokens;
   }
@@ -48,23 +47,26 @@ export class LoginUseCases {
     await this.userRepository.updateRefreshToken(email, token);
   }
 
-  getTokens(user: UserModel) {
+  async getTokens(user: UserModel) {
     const accessToken = this.getAccessToken(user);
-    const refreshToken = this.getRefreshToken(user);
+    const refreshToken = await this.getRefreshToken(user);
 
-    return { accessToken, refreshToken };
+    return [accessToken, refreshToken];
   }
 
   getAccessToken(user: UserModel) {
     const secret = this.jwtConfig.getJwtSecret();
     const expiresIn = this.jwtConfig.getJwtExpirationTime();
-    return this.createToken(user, secret, expiresIn);
+    const token = this.createToken(user, secret, expiresIn);
+    return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${this.jwtConfig.getJwtExpirationTime()}`;
   }
 
-  getRefreshToken(user: UserModel) {
+  async getRefreshToken(user: UserModel) {
     const secret = this.jwtConfig.getJwtRefreshSecret();
     const expiresIn = this.jwtConfig.getJwtRefreshExpirationTime();
-    return this.createToken(user, secret, expiresIn);
+    const token = this.createToken(user, secret, expiresIn);
+    await this.setCurrentRefreshToken(token, user.email);
+    return `Refresh=${token}; HttpOnly; Path=/; Max-Age=${this.jwtConfig.getJwtRefreshExpirationTime()}`;
   }
 
   createToken(user: UserModel, secret: string, expiresIn: string) {

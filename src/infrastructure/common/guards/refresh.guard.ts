@@ -35,6 +35,6 @@ export class RefreshGuard implements CanActivate {
   }
 
   private extractTokenFromCookie(request: Request): string | undefined {
-    return request.cookies['refreshToken'];
+    return request.cookies['Refresh'];
   }
 }

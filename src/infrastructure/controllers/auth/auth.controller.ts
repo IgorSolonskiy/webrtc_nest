@@ -1,5 +1,3 @@
-import { Response } from 'express';
-
 import {
   Body,
   ClassSerializerInterceptor,
@@ -7,7 +5,7 @@ import {
   Get,
   Inject,
   Post,
-  Res,
+  Req,
   UseGuards,
   UseInterceptors,
   Request,
@@ -47,37 +45,35 @@ export class AuthController {
 
   @Post('login')
   @ApiOperation({ description: 'login' })
-  async login(@Res() response: Response, @Body() data: LoginUserDto) {
+  async login(@Req() request, @Body() data: LoginUserDto) {
     const tokens = await this.loginUseCaseProxy.execute(data);
-    const options = { httpOnly: true, secure: true };
-
-    response.cookie('refreshToken', tokens.refreshToken, options);
-    response.json({ accessToken: tokens.accessToken });
+    request.res.setHeader('Set-Cookie', tokens);
+    return { message: 'ok' };
   }
 
   @UseGuards(RefreshGuard)
   @Post('refresh')
   @ApiOperation({ description: 'refresh' })
-  async refresh(@Request() req) {
-    const { id, email, username } = req.user;
+  async refresh(@Request() request) {
+    const { id, email, username } = request.user;
     const accessToken = await this.refreshUseCaseProxy.execute({
       id,
       email,
       username,
     });
 
-    return { accessToken };
+    request.res.setHeader('Set-Cookie', accessToken);
+    return { message: 'ok' };
   }
 
   @UseGuards(AuthGuard)
   @Post('logout')
   @ApiBearerAuth()
   @ApiOperation({ description: 'logout' })
-  async logout(@Request() req, @Res() response: Response) {
-    await this.logoutUseCaseProxy.execute(req.user);
-
-    response.cookie('refreshToken', '', { httpOnly: true, maxAge: 0 });
-    response.json({ message: 'ok' });
+  async logout(@Request() request) {
+    const cookie = await this.logoutUseCaseProxy.execute(request.user);
+    request.res.setHeader('Set-Cookie', cookie);
+    return { message: 'ok' };
   }
 
   @UseGuards(AuthGuard)
