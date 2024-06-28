@@ -5,9 +5,9 @@ import { LogoutUseCases } from '~usecases/auth/logout.usecases';
 import { RegisterUseCases } from '~usecases/auth/register.usecases';
 
 import { UserRepository } from '~infrastructure/repositories/user.repository';
-import { BcryptService } from '~infrastructure/bcrypt/bcrypt.service';
+import { BcryptService } from '~infrastructure/services/bcrypt/bcrypt.service';
 import { EnvironmentModule } from '~infrastructure/config/environment/environment.module';
-import { BcryptModule } from '~infrastructure/bcrypt/bcrypt.module';
+import { BcryptModule } from '~infrastructure/services/bcrypt/bcrypt.module';
 import { RepositoriesModule } from '~infrastructure/repositories/repositories.module';
 
 @Module({
