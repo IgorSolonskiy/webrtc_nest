@@ -7,7 +7,7 @@ export interface IUserRepository {
 
   checkExistsEmail(email: string): Promise<boolean>;
 
-  updateLastLogin(username: string): Promise<void>;
+  updateLastLogin(email: string): Promise<void>;
 
   updateRefreshToken(username: string, refreshToken: string): Promise<void>;
 }

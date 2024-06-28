@@ -31,9 +31,12 @@ export class UsecasesProxyModule {
           ) => new RegisterUseCases(userRepository, bcryptService),
         },
         {
-          inject: [],
+          inject: [UserRepository, BcryptService],
           provide: UsecasesProxyModule.LOGIN_USECASES_PROXY,
-          useFactory: () => new LoginUseCases(),
+          useFactory: (
+            userRepository: UserRepository,
+            bcryptService: BcryptService,
+          ) => new LoginUseCases(userRepository, bcryptService),
         },
         {
           inject: [],

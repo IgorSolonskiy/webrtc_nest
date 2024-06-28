@@ -17,6 +17,7 @@ import { LogoutUseCases } from '~usecases/auth/logout.usecases';
 
 import { UsecasesProxyModule } from '~infrastructure/usecases-proxy/usecases-proxy.module';
 import { CreateUserDto } from '~infrastructure/dto/create-user.dto';
+import { LoginUserDto } from '~infrastructure/dto/login-user.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -38,8 +39,8 @@ export class AuthController {
 
   @Post('login')
   @ApiOperation({ description: 'login' })
-  async login(@Res() response: Response) {
-    const tokens = await this.loginUseCaseProxy.execute();
+  async login(@Res() response: Response, @Body() data: LoginUserDto) {
+    const tokens = await this.loginUseCaseProxy.execute(data);
 
     response.cookie('refreshToken', tokens.refreshToken, { httpOnly: true });
     response.json({ accessToken: tokens.accessToken });

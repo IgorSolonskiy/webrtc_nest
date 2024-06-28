@@ -34,10 +34,10 @@ export class UserRepository implements IUserRepository {
     return this.toUser(userEntity);
   }
 
-  async updateLastLogin(username: string): Promise<void> {
+  async updateLastLogin(email: string): Promise<void> {
     await this.userEntityRepository.update(
       {
-        username,
+        email,
       },
       { last_login: () => 'CURRENT_TIMESTAMP' },
     );
