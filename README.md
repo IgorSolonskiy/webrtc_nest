@@ -1,73 +1,64 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+## WEBRTC
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+<p>This project is built using NestJS, a progressive Node.js framework for building efficient and scalable server-side applications. The project adheres to Clean Architecture principles to ensure a robust, maintainable, and scalable codebase.</p>
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Getting Started
 
-## Description
+### Prerequisites
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+1. Node.js (version 20.x or later)
+2. Docker
+3. Docker Compose
 
-## Installation
+### Installation
 
-```bash
-$ npm install
-```
+1. Clone the repository:
+   `git clone https://github.com/IgorSolonskiy/webrtc_nest.git
+   cd your-repo`
 
-## Running the app
+2. Install dependencies:
+   `npm install`
 
-```bash
-# development
-$ npm run start
+3. Environment Variables:
+   `cp .env.example .env
+   `
 
-# watch mode
-$ npm run start:dev
+### Setting Up the Database
 
-# production mode
-$ npm run start:prod
-```
+<p>This project uses PostgreSQL as its database. The database can be easily set up using Docker Compose.</p>
 
-## Test
+1. Start the PostgreSQL container:
+   `docker-compose up -d`
+2. Check if the container is running:
+   `docker-compose ps`
 
-```bash
-# unit tests
-$ npm run test
+### Running the Application
 
-# e2e tests
-$ npm run test:e2e
+1. Start the development server:
+   `npm run start:dev`
+2. Access the application:
+   `Open your browser and navigate to http://localhost:3000.`
 
-# test coverage
-$ npm run test:cov
-```
+### Building for Production
 
-## Support
+1. To build the application for production, run:
+   `npm run build`
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+### Clean Architecture
 
-## Stay in touch
+<p>This project follows Clean Architecture principles, which separates the code into distinct layers. The main layers are:</p>
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+1. Domain: Contains the business logic and domain entities.
+2. UseCases: Handles application-specific business rules.
+3. Infrastructure: Deals with external systems such as databases, web frameworks, etc.
 
-## License
-
-Nest is [MIT licensed](LICENSE).
+### Project Structure
+    .
+    ├──src
+         ├── domain                   
+         ├── infrastructure                    
+         ├── usecases                     
+         ├── app.module.ts                   
+         ├── main.ts
+    ├── docker-compose.yml
+    └── README.md
