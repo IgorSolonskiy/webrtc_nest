@@ -4,8 +4,13 @@ export interface IJwtServicePayload {
   email: string;
 }
 
+export interface IJwtExtendedPayload extends IJwtServicePayload {
+  iat: number;
+  exp: number;
+}
+
 export interface IJwtService {
-  checkToken(token: string): Promise<any>;
+  checkToken(token: string, secret: string): Promise<IJwtExtendedPayload>;
 
   createToken(
     payload: IJwtServicePayload,

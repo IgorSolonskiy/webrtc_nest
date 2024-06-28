@@ -17,11 +17,13 @@ import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { LoginUseCases } from '~usecases/auth/login.usecases';
 import { RegisterUseCases } from '~usecases/auth/register.usecases';
 import { LogoutUseCases } from '~usecases/auth/logout.usecases';
+import { RefreshUseCases } from '~usecases/auth/refresh.usecases';
 
 import { UsecasesProxyModule } from '~infrastructure/usecases-proxy/usecases-proxy.module';
 import { CreateUserDto } from '~infrastructure/dto/create-user.dto';
 import { LoginUserDto } from '~infrastructure/dto/login-user.dto';
 import { AuthGuard } from '~infrastructure/common/guards/auth.guard';
+import { RefreshGuard } from '~infrastructure/common/guards/refresh.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -32,6 +34,8 @@ export class AuthController {
     private readonly loginUseCaseProxy: LoginUseCases,
     @Inject(UsecasesProxyModule.LOGOUT_USECASES_PROXY)
     private readonly logoutUseCaseProxy: LogoutUseCases,
+    @Inject(UsecasesProxyModule.REFRESH_USECASES_PROXY)
+    private readonly refreshUseCaseProxy: RefreshUseCases,
   ) {}
 
   @UseInterceptors(ClassSerializerInterceptor)
@@ -51,6 +55,20 @@ export class AuthController {
       secure: true,
     });
     response.json({ accessToken: tokens.accessToken });
+  }
+
+  @UseGuards(RefreshGuard)
+  @Post('refresh')
+  @ApiOperation({ description: 'refresh' })
+  async refresh(@Request() req) {
+    const { id, email, username } = req.user;
+    const accessToken = await this.refreshUseCaseProxy.execute({
+      id,
+      email,
+      username,
+    });
+
+    return { accessToken };
   }
 
   @UseGuards(AuthGuard)
