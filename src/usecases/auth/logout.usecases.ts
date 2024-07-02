@@ -6,9 +6,5 @@ export class LogoutUseCases {
 
   async execute({ email }: IJwtServicePayload) {
     await this.userRepository.clearRefreshToken(email);
-    return [
-      'Authentication=; HttpOnly; Path=/; Max-Age=0',
-      'Refresh=; HttpOnly; Path=/; Max-Age=0',
-    ];
   }
 }

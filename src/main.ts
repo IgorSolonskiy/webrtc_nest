@@ -1,5 +1,3 @@
-import * as cookieParser from 'cookie-parser';
-
 import { NestFactory } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 
@@ -10,7 +8,10 @@ async function bootstrap() {
   const configService = app.get<ConfigService>(ConfigService);
   const port = configService.get('PORT');
 
-  app.use(cookieParser());
+  app.enableCors({
+    origin: true,
+    credentials: true,
+  });
   app.setGlobalPrefix('api');
 
   await app.listen(port);

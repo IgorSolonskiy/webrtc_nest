@@ -6,9 +6,9 @@ import {
   Inject,
   Post,
   Req,
+  Request,
   UseGuards,
   UseInterceptors,
-  Request,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 
@@ -46,9 +46,7 @@ export class AuthController {
   @Post('login')
   @ApiOperation({ description: 'login' })
   async login(@Req() request, @Body() data: LoginUserDto) {
-    const tokens = await this.loginUseCaseProxy.execute(data);
-    request.res.setHeader('Set-Cookie', tokens);
-    return { message: 'ok' };
+    return await this.loginUseCaseProxy.execute(data);
   }
 
   @UseGuards(RefreshGuard)
@@ -61,9 +59,7 @@ export class AuthController {
       email,
       username,
     });
-
-    request.res.setHeader('Set-Cookie', accessToken);
-    return { message: 'ok' };
+    return { accessToken };
   }
 
   @UseGuards(AuthGuard)
@@ -71,8 +67,7 @@ export class AuthController {
   @ApiBearerAuth()
   @ApiOperation({ description: 'logout' })
   async logout(@Request() request) {
-    const cookie = await this.logoutUseCaseProxy.execute(request.user);
-    request.res.setHeader('Set-Cookie', cookie);
+    await this.logoutUseCaseProxy.execute(request.user);
     return { message: 'ok' };
   }
 

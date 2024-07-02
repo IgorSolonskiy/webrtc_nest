@@ -51,14 +51,13 @@ export class LoginUseCases {
     const accessToken = this.getAccessToken(user);
     const refreshToken = await this.getRefreshToken(user);
 
-    return [accessToken, refreshToken];
+    return { accessToken, refreshToken };
   }
 
   getAccessToken(user: UserModel) {
     const secret = this.jwtConfig.getJwtSecret();
     const expiresIn = this.jwtConfig.getJwtExpirationTime();
-    const token = this.createToken(user, secret, expiresIn);
-    return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${this.jwtConfig.getJwtExpirationTime()}`;
+    return this.createToken(user, secret, expiresIn);
   }
 
   async getRefreshToken(user: UserModel) {
@@ -66,7 +65,7 @@ export class LoginUseCases {
     const expiresIn = this.jwtConfig.getJwtRefreshExpirationTime();
     const token = this.createToken(user, secret, expiresIn);
     await this.setCurrentRefreshToken(token, user.email);
-    return `Refresh=${token}; HttpOnly; Path=/; Max-Age=${this.jwtConfig.getJwtRefreshExpirationTime()}`;
+    return token;
   }
 
   createToken(user: UserModel, secret: string, expiresIn: string) {

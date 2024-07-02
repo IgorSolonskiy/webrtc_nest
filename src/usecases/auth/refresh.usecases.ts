@@ -13,7 +13,6 @@ export class RefreshUseCases {
   async execute(payload: IJwtServicePayload) {
     const secret = this.jwtConfig.getJwtSecret();
     const expiresIn = this.jwtConfig.getJwtExpirationTime();
-    const token = this.jwtTokenService.createToken(payload, secret, expiresIn);
-    return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${this.jwtConfig.getJwtExpirationTime()}`;
+    return this.jwtTokenService.createToken(payload, secret, expiresIn);
   }
 }
