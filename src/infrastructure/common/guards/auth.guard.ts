@@ -3,6 +3,7 @@ import { Request } from 'express';
 import {
   CanActivate,
   ExecutionContext,
+  ForbiddenException,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -29,7 +30,7 @@ export class AuthGuard implements CanActivate {
         this.jwtConfig.getJwtSecret(),
       );
     } catch {
-      throw new UnauthorizedException();
+      throw new ForbiddenException();
     }
     return true;
   }

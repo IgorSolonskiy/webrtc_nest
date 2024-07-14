@@ -1,4 +1,4 @@
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { BadRequestException } from '@nestjs/common';
 
 import { IUserRepository } from '~domain/repositories/userRepository.interface';
 import { IBcryptService } from '~domain/adapters/bcrypt.interface';
@@ -20,7 +20,9 @@ export class LoginUseCases {
   async execute(data: Pick<UserModel, 'email' | 'password'>) {
     const user = await this.userRepository.getUserByEmail(data.email);
 
-    if (!user) throw new NotFoundException();
+    if (!user) {
+      throw new BadRequestException('Email or password is incorrect.');
+    }
 
     const match = await this.bcryptService.compare(
       data.password,
